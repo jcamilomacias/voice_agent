@@ -16,6 +16,18 @@ Includes: `frames.py` additions (`UserStartedSpeakingFrame`, `UserStoppedSpeakin
 - [ ] `AudioRawFrame`s are forwarded downstream unchanged (VAD is non-destructive)
 - [ ] `EndFrame` still propagates cleanly through the VAD stage
 
+## Tests to write (tests/test_vad_processor.py)
+
+Define `MockVADProvider` implementing the `VADProvider` Protocol. It takes a `list[bool]` at construction and returns the next value on each `is_speech()` call. This is the first time students use a Protocol as a test seam — the key insight that makes the design testable.
+
+- [ ] `MockVADProvider` satisfies the `VADProvider` Protocol (type-check passes)
+- [ ] Test: silence frames only → no speaking state frames emitted
+- [ ] Test: transition from silence to speech → exactly one `UserStartedSpeakingFrame` emitted
+- [ ] Test: transition from speech to silence → exactly one `UserStoppedSpeakingFrame` emitted
+- [ ] Test: `AudioRawFrame`s pass through the output queue regardless of VAD state
+- [ ] Test: `EndFrame` propagates through the VAD processor and exits cleanly
+- [ ] `make test` passes with no microphone, no model download, no `.env` file
+
 ## Blocked by
 
 - #01 — Project scaffold + silent echo loop

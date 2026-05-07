@@ -1,20 +1,20 @@
-# 10 — Unit test suite
+# 10 — Test coverage audit + audio hardware mocking
 
 ## What to build
 
-Write a comprehensive unit test suite covering all deep modules. Tests inject frames directly into real `asyncio.Queue` instances using mock providers — no real hardware, no API calls, no network. Each test verifies observable external behavior: what frames come out given specific frames as input.
+By this point, each issue from 01-09 has its own test file. This issue has two goals: (1) audit for gaps and fill them, and (2) solve the one testing problem that could not be solved earlier — mocking `sounddevice` so that `audio_input.py` and `audio_output.py` can be tested without real hardware.
 
-Covers: `frames.py` (instantiation, field defaults), `conversation.py` (sliding window, turn accumulation, system prompt), `utils/sentence_aggregator.py` (boundary detection, partial accumulation, CancelFrame flush), `processors/vad/` (correct speaking state frame emission), `processors/stt/` (TranscriptionFrame emission, partial vs final), `processors/llm/` (LLMResponseFrame streaming, ConversationContext updates, CancelFrame passthrough), `processors/tts/` (TTSAudioFrame chunks, CancelFrame buffer flush), `pipeline.py` (end-to-end frame flow with all-mock providers, CancelFrame propagation across full pipeline).
+Covers: `audio_input.py` (sounddevice callback → queue bridge, tested via mock), `audio_output.py` (queue → playback, tested via mock), full-pipeline smoke test with all-mock providers confirming `make test` is a complete fast suite.
 
 ## Acceptance criteria
 
-- [ ] `make test` runs all unit tests with no API keys required
-- [ ] All processor tests use mock providers that implement the relevant Protocol
-- [ ] `ConversationContext` sliding window is tested at boundary (exactly `max_turns`, over limit)
-- [ ] `SentenceAggregator` tested for: single sentence, multi-sentence, partial (no boundary yet), flush on CancelFrame
-- [ ] Full pipeline `CancelFrame` propagation test: frames in-flight are discarded, pipeline resets
-- [ ] No test imports sounddevice, makes network calls, or touches the filesystem
-- [ ] Tests are in `tests/` and separated from integration tests by marker
+- [ ] `audio_input.py` has a unit test that patches sounddevice and asserts `AudioRawFrame`s arrive in the queue
+- [ ] `audio_output.py` has a unit test that puts `TTSAudioFrame`s in its input queue and asserts playback is triggered (via mock)
+- [ ] Coverage report shows ≥ 90% line coverage across all non-provider modules
+- [ ] Any gap identified in Issues 01-09 test coverage is filled
+- [ ] `make test` runs in under 10 seconds with no API keys, no microphone, no speaker
+- [ ] No test imports real sounddevice, makes network calls, or touches the filesystem
+- [ ] All tests in `tests/` are separated from integration tests by `@pytest.mark.integration`
 
 ## Blocked by
 
