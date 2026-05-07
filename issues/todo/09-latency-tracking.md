@@ -1,0 +1,19 @@
+# 09 — Latency tracking — LatencyTracker integration
+
+## What to build
+
+Add per-stage latency measurement using `LatencyTracker`, integrated into the pipeline so that STT latency, LLM time-to-first-token, TTS time-to-first-audio, and end-to-end latency are printed to stdout after each conversation turn.
+
+Includes: `utils/timing.py` (`LatencyTracker` with `record(stage, timestamp)` and per-turn summary), timestamps added to relevant frames or recorded inline in processors, stdout display of latency report after each assistant turn.
+
+## Acceptance criteria
+
+- [ ] After each turn, stdout shows: STT latency, LLM time-to-first-token, TTS time-to-first-audio, end-to-end latency
+- [ ] All timestamps use `time.perf_counter()` for precision
+- [ ] `LatencyTracker` is reset at the start of each new user utterance
+- [ ] Latency display does not block or delay audio playback
+- [ ] `LatencyTracker` is a standalone utility with no queue dependencies
+
+## Blocked by
+
+- #05 — TTS stage — full end-to-end voice loop
