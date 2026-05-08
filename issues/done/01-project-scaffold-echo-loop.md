@@ -17,6 +17,18 @@ Includes: `pyproject.toml` (uv), `Makefile` (`make install`, `make test`, `make 
 - [ ] All settings (sample rate, chunk size) are loaded from `config.py` / `.env`
 - [ ] `.env.example` documents all required environment variables
 
+## Tests to write (tests/test_frames.py, tests/test_config.py, tests/test_pipeline.py)
+
+`frames.py` and `config.py` are pure modules with zero external dependencies — test them immediately after writing.
+
+- [ ] `AudioRawFrame`, `StartFrame`, `EndFrame` instantiate with correct field types
+- [ ] `AudioRawFrame` with wrong field type raises `TypeError`
+- [ ] `config.py` loads `SAMPLE_RATE` from env and falls back to the default when unset
+- [ ] `config.py` loads `CHUNK_SIZE` from env
+- [ ] Pipeline echo test: put a sequence of `AudioRawFrame`s and an `EndFrame` into the input queue; assert the same frames arrive in order in the output queue (use a mock source, no sounddevice)
+- [ ] `EndFrame` in input queue causes pipeline to exit cleanly (no hang)
+- [ ] `make test` passes with no microphone and no `.env` file
+
 ## Blocked by
 
 None — can start immediately.

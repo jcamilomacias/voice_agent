@@ -14,6 +14,17 @@ Includes: `utils/timing.py` (`LatencyTracker` with `record(stage, timestamp)` an
 - [ ] Latency display does not block or delay audio playback
 - [ ] `LatencyTracker` is a standalone utility with no queue dependencies
 
+## Tests to write (tests/test_timing.py)
+
+`LatencyTracker` is a pure utility — it has no I/O, no queues, no providers. Test it immediately after writing it.
+
+- [ ] `record(stage, t)` stores a timestamp for the given stage
+- [ ] `summary()` returns correct per-stage deltas (STT latency, LLM TTFT, TTS TTFA, end-to-end)
+- [ ] `reset()` clears all stored timestamps
+- [ ] `summary()` on an empty tracker returns `{}` or a zero-filled structure without raising
+- [ ] Tracker is reset when a new `UserStartedSpeakingFrame` is received by the processor that uses it
+- [ ] `make test` passes with no hardware, no API keys, no network
+
 ## Blocked by
 
 - #05 — TTS stage — full end-to-end voice loop

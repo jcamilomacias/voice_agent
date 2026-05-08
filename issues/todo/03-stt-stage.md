@@ -16,6 +16,18 @@ Includes: `frames.py` additions (`TranscriptionFrame` with `text: str`, `is_fina
 - [ ] `DEEPGRAM_API_KEY` is loaded from `.env` via `config.py`
 - [ ] `EndFrame` and `CancelFrame` propagate cleanly through the STT stage
 
+## Tests to write (tests/test_stt_processor.py)
+
+Define `MockSTTProvider` implementing the `STTProvider` Protocol. It takes a list of `(text, is_final)` tuples and yields them as an async generator, without touching any network.
+
+- [ ] `MockSTTProvider` satisfies the `STTProvider` Protocol
+- [ ] Test: `AudioRawFrame`s during speech → `TranscriptionFrame(is_final=False)` emitted for partials
+- [ ] Test: `UserStoppedSpeakingFrame` received → `TranscriptionFrame(is_final=True)` emitted
+- [ ] Test: `AudioRawFrame`s during silence (before `UserStartedSpeakingFrame`) → no transcription emitted
+- [ ] Test: `EndFrame` propagates through the STT processor
+- [ ] Test: `CancelFrame` propagates through the STT processor without emitting any transcript
+- [ ] `make test` passes with no `DEEPGRAM_API_KEY` and no network
+
 ## Blocked by
 
 - #02 — VAD stage — detect speaking state

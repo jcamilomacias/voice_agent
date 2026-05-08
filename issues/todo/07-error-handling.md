@@ -15,6 +15,18 @@ Includes: `frames.py` additions (`ErrorFrame` with `error: Exception`, `processo
 - [ ] `ErrorFrame` with `fatal: False` is logged and the pipeline continues listening
 - [ ] `ErrorFrame.processor` identifies which stage produced the error
 
+## Tests to write (tests/test_error_handling.py)
+
+Define `FailingSTTProvider`, `FailingLLMProvider`, `FailingTTSProvider` — mock providers whose methods raise an exception. Use them to test error behavior without touching real APIs.
+
+- [ ] Test: `FailingSTTProvider` raises → `ErrorFrame(processor="stt", fatal=False)` emitted, no crash
+- [ ] Test: `FailingLLMProvider` raises → `ErrorFrame(processor="llm", fatal=False)` emitted, no crash
+- [ ] Test: `FailingTTSProvider` raises → `ErrorFrame(processor="tts", fatal=False)` emitted, no crash
+- [ ] Test: `ErrorFrame(fatal=True)` received by `pipeline.py` → `EndFrame` emitted and pipeline exits
+- [ ] Test: `ErrorFrame(fatal=False)` received by `pipeline.py` → logged, pipeline continues (next input processed)
+- [ ] Test: `ErrorFrame.processor` field correctly identifies the failing stage
+- [ ] `make test` passes with no API keys and no network
+
 ## Blocked by
 
 - #05 — TTS stage — full end-to-end voice loop
