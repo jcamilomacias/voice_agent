@@ -29,3 +29,13 @@ class AudioRawFrame(Frame):
             raise TypeError(f"sample_rate must be int, got {type(self.sample_rate)}")
         if not isinstance(self.num_channels, int):
             raise TypeError(f"num_channels must be int, got {type(self.num_channels)}")
+
+
+@dataclass
+class UserStartedSpeakingFrame(Frame):
+    pass
+
+
+@dataclass
+class UserStoppedSpeakingFrame(Frame):
+    pass
