@@ -10,3 +10,4 @@ class Settings(BaseSettings):
 
     sample_rate: int = 16000
     chunk_size: int = 512
+    deepgram_api_key: str = ""

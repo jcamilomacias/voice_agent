@@ -39,3 +39,14 @@ class UserStartedSpeakingFrame(Frame):
 @dataclass
 class UserStoppedSpeakingFrame(Frame):
     pass
+
+
+@dataclass
+class TranscriptionFrame(Frame):
+    text: str
+    is_final: bool
+
+
+@dataclass
+class CancelFrame(Frame):
+    pass

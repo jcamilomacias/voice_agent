@@ -17,6 +17,9 @@ vad = [
     "silero-vad",
     "torch",
 ]
+stt = [
+    "deepgram-sdk>=3.0",
+]
 
 [build-system]
 requires = ["hatchling"]
