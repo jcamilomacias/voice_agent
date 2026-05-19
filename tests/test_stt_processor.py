@@ -33,7 +33,8 @@ def test_mock_stt_provider_satisfies_protocol():
 
 # ── Cycle 2: partials during speech ─────────────────────────────────────────
 
-@pytest.mark.asyncio
+@pytest.mark.asyncio # Decorator to mark this test as an asynchronous test
+
 async def test_audio_during_speech_emits_partial_transcriptions():
     from src.processors.stt.processor import STTProcessor
 
